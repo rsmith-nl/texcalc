@@ -18,7 +18,7 @@ from __future__ import division, print_function
 __version__ = '$Revision$'[11:-2]
 
 
-def varable(name, value, unit, plaintext=False):
+def variable(name, value, unit, plaintext=False):
     """Define a variable and print its value.
 
     :param name: Name of the global variable to define
