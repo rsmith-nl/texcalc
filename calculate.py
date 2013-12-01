@@ -18,54 +18,73 @@ from __future__ import division, print_function
 __version__ = '$Revision$'[11:-2]
 
 
-def variable(name, value, unit, plaintext=False):
+def variable(name, value, unit, fmt=None, texname=None, plaintext=False):
     """Define a variable and print its value.
 
     :param name: Name of the global variable to define
     :param value: Value of the variable. Will be converted to float internally.
     :param unit: Unit of the variable or None if dimensionless.
+    :param fmt: Format for the result.
+    :param texname: TeX formatted version of the variable name.
     :param plaintext: Use plaintext output. Default is False; output LaTeX.
     """
     cmd = ' '.join([name, '=', 'float({})'.format(value)])
     exec(cmd, globals())
+    if fmt is None:
+        fmt = 'g'
     if plaintext:
         if unit is not None:
-            print('{} = {} {}'.format(name, value, unit))
+            print('{n} = {v:{f}} {u}'.format(n=name, v=value, f=fmt, u=unit))
         else:
-            print('{} = {}'.format(name, value))
+            print('{n} = {v:{f}}'.format(n=name, v=value, f=fmt))
     else:
+        if texname is not None:
+            name = texname
         if unit is not None:
-            outs = ''.join(['{} = '.format(name), r'\SI{', '{}'.format(value),
+            outs = ''.join(['${}$ = '.format(name), r'\SI{',
+                            '{v:{f}}'.format(v=value, f=fmt),
                             r'}{', unit, r'}\\'])
         else:
-            outs = ''.join(['{} = '.format(name), r'\num{', '{}'.format(value),
+            outs = ''.join(['${}$ = '.format(name), r'\num{',
+                            '{v:{f}}'.format(v=value, f=fmt),
                             r'}\\'])
         print(outs)
 
 
-def equation(name, expr, unit, texexpr=None, plaintext=False):
+def equation(name, expr, unit, fmt=None, texname=None, texexpr=None,
+             plaintext=False):
     """Print an equation and its resulting value.
 
     :param name: Name of the global result variable to define
     :param expr: The expression to evaluate
     :param unit: Unit of the result or None if dimensionless.
+    :param fmt: Format for the result.
+    :param texname: TeX formatted version of the variable name.
     :param texexpr: TeX formatted version of the expression.
     :param plaintext: Use plaintext output. Default is False; output LaTeX.
     """
     cmd = ' '.join([name, '=', expr])
     exec(cmd, globals())
+    if fmt is None:
+        fmt = 'g'
     if plaintext:
         if unit is not None:
-            print('{} = {} = {:g} {}'.format(name, expr, eval(name), unit))
+            print('{n} = {e} = {v:{f}} {u}'.format(n=name, e=expr,
+                                                   v=eval(name),
+                                                   f=fmt, u=unit))
         else:
-            print('{} = {} = {:g}'.format(name, expr, eval(name)))
+            print('{n} = {e} = {v:{f}}'.format(n=name, e=expr, v=eval(name),
+                                               f=fmt))
     else:
         if texexpr is None:
             texexpr = expr
+        if texname is None:
+            texname = name
         if unit is not None:
-            outs = ''.join(['{} = '.format(name), texexpr, r' = \SI{',
-                            '{}'.format(eval(name)), r'}{', unit, r'}\\'])
+            outs = ''.join(['${}$ = '.format(texname), texexpr, r' = \SI{',
+                            '{v:{f}}'.format(v=eval(name), f=fmt),
+                            r'}{', unit, r'}\\'])
         else:
-            outs = ''.join(['{} = '.format(name), texexpr, r' = \num{',
-                            '{}'.format(eval(name)), r'}\\'])
+            outs = ''.join(['${}$ = '.format(texname), texexpr, r' = \num{',
+                            '{v:{f}}'.format(v=eval(name), f=fmt), r'}\\'])
         print(outs)
