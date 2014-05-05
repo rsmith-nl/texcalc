@@ -1,8 +1,7 @@
-# /usr/bin/env python2
 # vim:fileencoding=utf-8
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
-# Created: 2013-12-01 11:03:52 +0100
+# Created: 2014-05-04 11:28:35 +0200
 # Modified: $Date$
 #
 # To the extent possible under law, R.F. Smith has waived all copyright and
@@ -14,77 +13,107 @@ Note that this module uses exec(). It should therefore not be used with
 untrusted input."""
 
 from __future__ import division, print_function
+import ast
 
 __version__ = '$Revision$'[11:-2]
 
 
-def variable(name, value, unit, fmt=None, texname=None, plaintext=False):
-    """Define a variable and print its value.
+def expression(name, expr, unit=''):
+    """@todo: Docstring for expression
 
-    :param name: Name of the global variable to define
-    :param value: Value of the variable. Will be converted to float internally.
-    :param unit: Unit of the variable or None if dimensionless.
-    :param fmt: Format for the result.
-    :param texname: TeX formatted version of the variable name.
-    :param plaintext: Use plaintext output. Default is False; output LaTeX.
+    :param name: @todo
+    :param expr: @todo
+    :param unit: @todo
+    :returns: @todo
     """
-    cmd = ' '.join([name, '=', 'float({})'.format(value)])
-    exec(cmd, globals())
-    if fmt is None:
-        fmt = 'g'
-    if plaintext:
-        if unit is not None:
-            print('{n} = {v:{f}} {u}'.format(n=name, v=value, f=fmt, u=unit))
-        else:
-            print('{n} = {v:{f}}'.format(n=name, v=value, f=fmt))
+    value = eval(expr)
+    exec('{} = {}'.format(name, value), globals())
+    n = ast.parse(expr)
+    if type(n.body[0].value).__name__ == 'Num':
+        print('${}$ = \SI{{{}}}{{{}}}'.format(name, value, unit))
     else:
-        if texname is not None:
-            name = texname
-        if unit is not None:
-            outs = ''.join(['${}$ = '.format(name), r'\SI{',
-                            '{v:{f}}'.format(v=value, f=fmt),
-                            r'}{', unit, r'}\\'])
-        else:
-            outs = ''.join(['${}$ = '.format(name), r'\num{',
-                            '{v:{f}}'.format(v=value, f=fmt),
-                            r'}\\'])
-        print(outs)
+        v = LatexVisitor()
+        v.visit(n)
+        print('${} = {}$ = \SI{{{}}}{{{}}}'.format(name, v.astex(),
+                                                   value, unit))
 
 
-def equation(name, expr, unit, fmt=None, texname=None, texexpr=None,
-             plaintext=False):
-    """Print an equation and its resulting value.
+class LatexVisitor(ast.NodeVisitor):
+    """ example recursive visitor """
 
-    :param name: Name of the global result variable to define
-    :param expr: The expression to evaluate
-    :param unit: Unit of the result or None if dimensionless.
-    :param fmt: Format for the result.
-    :param texname: TeX formatted version of the variable name.
-    :param texexpr: TeX formatted version of the expression.
-    :param plaintext: Use plaintext output. Default is False; output LaTeX.
-    """
-    cmd = ' '.join([name, '=', expr])
-    exec(cmd, globals())
-    if fmt is None:
-        fmt = 'g'
-    if plaintext:
-        if unit is not None:
-            print('{n} = {e} = {v:{f}} {u}'.format(n=name, e=expr,
-                                                   v=eval(name),
-                                                   f=fmt, u=unit))
-        else:
-            print('{n} = {e} = {v:{f}}'.format(n=name, e=expr, v=eval(name),
-                                               f=fmt))
-    else:
-        if texexpr is None:
-            texexpr = expr
-        if texname is None:
-            texname = name
-        if unit is not None:
-            outs = ''.join(['${}$ = '.format(texname), texexpr, r' = \SI{',
-                            '{v:{f}}'.format(v=eval(name), f=fmt),
-                            r'}{', unit, r'}\\'])
-        else:
-            outs = ''.join(['${}$ = '.format(texname), texexpr, r' = \num{',
-                            '{v:{f}}'.format(v=eval(name), f=fmt), r'}\\'])
-        print(outs)
+    def __init__(self):
+        """@todo: to be defined """
+        self.texexpr = []
+        self.target = None
+        ast.NodeVisitor.__init__(self)
+
+    def astex(self):
+        """Return a TeX mathematical expression
+        """
+        return ''.join(self.texexpr)
+
+    def visit_Module(self, node):
+        """ visit a Module node recursively"""
+        self.visit(node.body[0])
+
+    def visit_Expr(self, node):
+        """ visit a Module node recursively"""
+        self.visit(node.value)
+
+    def visit_BinOp(self, node):
+        """ visit a BinOp node"""
+        if type(node.op).__name__ == 'Div':
+            self.texexpr.append(r'\frac{')
+            self.visit(node.left)
+            self.texexpr.append(r'}{')
+            self.visit(node.right)
+            self.texexpr.append(r'}')
+            return
+        self.visit(node.left)
+        self.visit(node.op)
+        self.visit(node.right)
+
+    def generic_visit(self, node):
+        pass
+
+    def visit_Name(self, node):
+        """@todo: Docstring for visit_
+
+        :param node: @todo
+        :returns: @todo
+        """
+        self.texexpr.append(node.id)
+
+    def visit_Num(self, node):
+        """@todo: Docstring for visit_Num
+
+        :param node: @todo
+        :returns: @todo
+        """
+        self.texexpr.append(str(node.n))
+
+    def visit_Add(self, node):
+        self.texexpr.append('+')
+
+    def visit_Sub(self, node):
+        self.texexpr.append('-')
+
+    def visit_Mult(self, node):
+        self.texexpr.append(r'\cdot ')
+
+    def visit_Pow(self, node):
+        self.texexpr.append('^')
+
+    def visit_Div(self, node):
+        pass
+
+# Tests
+if __name__ == '__main__':
+    expression('rho_f', '1.62', 'g/cm^3')
+    expression('rho_r', '1.1', 'g/cm^3')
+    expression('v_f', '0.3')
+    expression('W_f', '450', 'g/m^2')
+    expression('t_f', 'W_f/(10000*rho_f)*10', 'mm')
+    expression('t', 't_f/v_f', 'mm')
+    expression('t_r', 't-t_f', 'mm')
+    expression('W_r', 't_f/10*(10000*rho_r)', 'g/m^2')
