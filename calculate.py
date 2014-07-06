@@ -24,9 +24,10 @@ __version__ = '$Revision$'[11:-2]
 def expression(name, expr, unit='', fmt=":.2f"):
     """@todo: Docstring for expression
 
-    :param name: @todo
-    :param expr: @todo
-    :param unit: @todo
+    :param name: Name of the variable to be assigned.
+    :param expr: Expression whose value is assigned to the variable
+    :param unit: Unit of the variable. Defaults to empty.
+    :param fmt:  Format of the result. Defaults to ":.2f".
     :returns: @todo
     """
     value = eval(expr)
