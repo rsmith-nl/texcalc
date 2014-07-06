@@ -21,7 +21,7 @@ from math import *
 __version__ = '$Revision$'[11:-2]
 
 
-def expression(name, expr, unit='', fmt=":.2f"):
+def expression(name, expr, unit=None, fmt=":.2f"):
     """@todo: Docstring for expression
 
     :param name: Name of the variable to be assigned.
@@ -35,14 +35,15 @@ def expression(name, expr, unit='', fmt=":.2f"):
     n = ast.parse(expr)
     if type(n.body[0].value).__name__ == 'Num':
         el = ['${}$'.format(name), '=']
-        val = ''.join(['\SI{{{', fmt, '}}}', '{{', unit, '}}'])
-        el.append(val.format(value))
     else:
         v = LatexVisitor()
         v.visit(n)
         el = ['${} = {}$'.format(name, v.astex()), '=']
-        val = ''.join(['\SI{{{', fmt, '}}}', '{{', unit, '}}'])
-        el.append(val.format(value))
+    if unit:
+        val = ''.join(['\\SI{{{', fmt, '}}}', '{{', unit, '}}'])
+    else:
+        val = ''.join(['\\num{{{', fmt, '}}}'])
+    el.append(val.format(value))
     print(' '.join(el))
 
 
