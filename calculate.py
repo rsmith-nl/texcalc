@@ -15,6 +15,9 @@ untrusted input."""
 from __future__ import division, print_function
 import ast
 
+# To make expressions more TeX-like, we make all the math functions available.
+from math import *
+
 __version__ = '$Revision$'[11:-2]
 
 
@@ -71,22 +74,40 @@ class LatexVisitor(ast.NodeVisitor):
         self.visit(node.value)
 
     def visit_BinOp(self, node):
-        if type(node.op).__name__ == 'Div':
+        if isinstance(node.op, ast.Div):
             self.txtexpr.append(r'\frac{')
             self.visit(node.left)
             self.txtexpr.append(r'}{')
             self.visit(node.right)
             self.txtexpr.append(r'}')
             return
-        self.visit(node.left)
+        if (isinstance(node.left, ast.BinOp) and
+           type(node.left.op).__name__ in ['Add', 'Sub']):
+            self.txtexpr.append(r'\left(')
+            self.visit(node.left)
+            self.txtexpr.append(r'\right)')
+        else:
+            self.visit(node.left)
         self.visit(node.op)
-        self.visit(node.right)
+        if (isinstance(node.right, ast.BinOp) and
+           type(node.right.op).__name__ in ['Add', 'Sub']):
+            self.txtexpr.append(r'\left(')
+            self.visit(node.right)
+            self.txtexpr.append(r'\right)')
+        else:
+            self.visit(node.right)
 
     def visit_Name(self, node):
         if node.id in LatexVisitor._fnames:
             self.txtexpr.append(LatexVisitor._fnames[node.id])
         else:
             self.txtexpr.append(node.id)
+
+    def visit_Attribute(self, node):
+        if node.attr in LatexVisitor._fnames:
+            self.txtexpr.append(LatexVisitor._fnames[node.attr])
+        else:
+            self.txtexpr.append(node.attr)
 
     def visit_Num(self, node):
         self.txtexpr.append(str(node.n))
@@ -112,19 +133,3 @@ class LatexVisitor(ast.NodeVisitor):
 
     def visit_Div(self, node):
         pass
-
-# Tests
-if __name__ == '__main__':
-    from math import sin, pi
-    sin(pi)
-    expression('rho_f', '1.62', 'g/cm^3')
-    expression('rho_r', '1.1', 'g/cm^3')
-    expression('v_f', '0.3')
-    expression('W_f', '450', 'g/m^2')
-    expression('t_f', 'W_f/(10000*rho_f)*10', 'mm')
-    expression('t', 't_f/v_f', 'mm')
-    expression('t_r', 't-t_f', 'mm')
-    expression('W_r', 't_f/10*(10000*rho_r)', 'g/m^2')
-    expression('D', '3', 'mm')
-    expression('A', 'pi/4*D**2', 'mm^2')
-    expression('s', 'sin(0.2*pi)')
