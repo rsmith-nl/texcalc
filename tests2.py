@@ -11,8 +11,11 @@
 # related or neighboring rights to tests2.py. This work is published
 # from the Netherlands. See http://creativecommons.org/publicdomain/zero/1.0/
 
-from calculate import expression
+from __future__ import division, print_function
+from calculate import Calculation
 
-expression('D', '3', 'mm')
-expression('A', 'pi/4*D**2', 'mm^2')
-expression('s', 'sin(0.2*pi)')
+c = Calculation()
+c.add('D', '3', 'mm')
+c.add('A', 'pi/4*D**2', 'mm^2')
+c.add('s', 'sin(0.2*pi)')
+print(c)

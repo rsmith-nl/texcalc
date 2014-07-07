@@ -11,15 +11,18 @@
 # related or neighboring rights to tests1.py. This work is published
 # from the Netherlands. See http://creativecommons.org/publicdomain/zero/1.0/
 
-from calculate import expression
+from __future__ import division, print_function
+from calculate import Calculation
 
-expression('rho_f', '1.62', 'g/cm^3')
-expression('rho_r', '1.1', 'g/cm^3')
-expression('v_f', '0.3')
-expression('W_f', '450', 'g/m^2')
-expression('t_f', 'W_f/(10000*rho_f)*10', 'mm')
-expression('t', 't_f/v_f', 'mm')
-expression('t_r', 't-t_f', 'mm')
-expression('W_r', 't_f/10*(10000*rho_r)', 'g/m^2')
-expression('Q', '(3.24-2)*(12-9)')
-expression('W', '(3.24*2)*(12-9)')
+c = Calculation()
+c.add('rho_f', '1.62', 'g/cm^3', 'Fiber density')
+c.add('rho_r', '1.2', 'g/cm^3', "Resin density")
+c.add('v_f', '0.3', '-', 'Fiber volume fraction')
+c.add('W_f', '450', 'g/m^2', "Area weight fibers")
+c.add('t_f', 'W_f/(10000*rho_f)*10', 'mm')
+c.add('t', 't_f/v_f', 'mm', "Laminate thickness")
+c.add('t_r', 't-t_f', 'mm')
+c.add('W_r', 't_f/10*(10000*rho_r)', 'g/m^2', "Area weight resin")
+c.add('Q', '(3.24-2)*(12-9)')
+c.add('W', '(3.24*2)*(12-9)')
+print(c)
