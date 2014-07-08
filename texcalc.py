@@ -59,33 +59,36 @@ class Calculation(object):
 
     def __init__(self):
         """Initialize the calculation."""
-        self.prefix = [r'\begingroup\hspace{-\tabcolsep}\begin{tabular}{llll}']
+        self.prefix = [r'\begingroup\hspace{-\tabcolsep}'
+                       r'\begin{tabular}{lclcrl}']
         self.suffix = [r'\end{tabular}\endgroup']
         self.lines = []
 
-    def add(self, name, expr, unit=None, comment=None, fmt=":.2f"):
+    def add(self, name, expr, unit=None, comment=None, fmt=".2f"):
         """Add an equation to the calculation.
 
-        :param name: @todo
-        :param expr: @todo
-        :param unit: @todo
-        :param fmt: @todo
+        :param name: Name of the variable to assign the result to.
+        :param expr: Python expression or number. Can contain functions from
+                     python's math module.
+        :param unit: Unit of the result in SIunitx format.
+        :param fmt: Number format for the result. Defaults to '.2f'
         :param comment: @todo
         """
+        expr = str(expr)
         value = eval(expr)
         exec('{} = {}'.format(name, value), globals())
         n = ast.parse(expr)
-        el = ['${}$ ='.format(_texify(name)), '&']
+        el = ['${}$ & = &'.format(_texify(name))]
         if type(n.body[0].value).__name__ == 'Num':
-            el.append('&')
+            el.append('& &')
         else:
             v = _LatexVisitor()
             v.visit(n)
-            el += ['${}$ ='.format(v.astex()), '&']
+            el.append('${}$ & = &'.format(v.astex()))
         if unit:
-            val = ''.join(['\\SI{{{', fmt, '}}}', '{{', unit, '}}'])
+            val = ''.join(['\\SI{{{:', fmt, '}}}', '{{', unit, '}}'])
         else:
-            val = ''.join(['\\num{{{', fmt, '}}}'])
+            val = ''.join(['\\num{{{:', fmt, '}}}'])
         el.append(val.format(value))
         if comment:
             el += ['&', str(comment), r'\\']
