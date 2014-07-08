@@ -12,7 +12,7 @@
 # from the Netherlands. See http://creativecommons.org/publicdomain/zero/1.0/
 
 from __future__ import division, print_function
-from calculate import Calculation
+from texcalc import Calculation
 
 c = Calculation()
 c.add('rho_f', '1.62', 'g/cm^3', 'Fiber density')

@@ -5,7 +5,7 @@
 # Modified: $Date$
 #
 # To the extent possible under law, R.F. Smith has waived all copyright and
-# related or neighboring rights to calculate.py. This work is published
+# related or neighboring rights to texcalc.py. This work is published
 # from the Netherlands. See http://creativecommons.org/publicdomain/zero/1.0/
 
 """Module to do and print calculations. Prints formatted statements.
