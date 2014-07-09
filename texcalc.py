@@ -16,7 +16,7 @@ from __future__ import division, print_function
 import ast
 
 # To make expressions more TeX-like, we make all the math functions available.
-from math import *
+import math
 
 __version__ = '$Revision$'[11:-2]
 
@@ -37,11 +37,9 @@ _greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
 
 # To make eval() less dangerous.
 _globals = {"__builtins__": None}
-_locals = {k: globals().get(k, None) for k in ['acos', 'asin', 'atan',
-                                               'ceil', 'cos', 'cosh',
-                                               'e', 'log', 'log10', 'pi',
-                                               'sin', 'sinh', 'sqrt', 'tan',
-                                               'tanh']}
+_lnames = ('acos', 'asin', 'atan', 'ceil', 'cos', 'cosh', 'e', 'log', 'log10',
+           'pi', 'sin', 'sinh', 'sqrt', 'tan', 'tanh')
+_locals = {k: eval('math.'+k) for k in _lnames}
 
 
 def _texify(name):
@@ -105,7 +103,7 @@ class Calculation(object):
         self.lines.append(' '.join(el))
 
     def __str__(self):
-        """Create a string representation for printing.
+        """Create a string representation of the calculation.
         :returns: string
         """
         total = self.prefix + self.lines + self.suffix
@@ -115,20 +113,19 @@ class Calculation(object):
 class _LatexVisitor(ast.NodeVisitor):
     """ example recursive visitor """
 
-    _fnames = {'sin': '\\sin', 'cos': '\\cos', 'tan': '\\tan',
-               'asin': '\\arcsin', 'acos': '\\arccos', 'atan': '\\arctan',
-               'sqrt': '\\sqrt', 'log': '\\ln', 'log10': '\\log',
-               'pi': '\\pi'}
+    _fnames = {k: '\\{}'.format(k) for k in _lnames}
+    # Exceptions where TeX deviates from Python:
+    _fnames['log'] = '\\ln'
+    _fnames['log10'] = '\\log'
+    del(_fnames['e'])  # Not a special name in TeX.
 
     def __init__(self):
-        """@todo: to be defined """
         self.txtexpr = []
         self.target = None
         ast.NodeVisitor.__init__(self)
 
     def astex(self):
-        """Return a TeX mathematical expression
-        """
+        """Return a TeX mathematical expression"""
         return ''.join(self.txtexpr)
 
     def generic_visit(self, node):
@@ -199,4 +196,5 @@ class _LatexVisitor(ast.NodeVisitor):
         self.txtexpr.append(')')
 
     def visit_Div(self, node):
+        '''Handled at the BinOp level, so pass.'''
         pass
