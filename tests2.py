@@ -15,7 +15,7 @@ from __future__ import division, print_function
 from texcalc import Calculation
 
 c = Calculation()
-c.add('D', '3', 'mm')
+c.add('D', 3, 'mm')
 c.add('A', 'pi/4*D**2', 'mm^2')
 c.add('s', 'sin(0.2*pi)')
 print(c)

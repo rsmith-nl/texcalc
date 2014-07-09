@@ -35,6 +35,14 @@ _greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
           '\\eta', 'Epsilon': '\\Epsilon', 'Zeta': '\\Zeta', 'sigma':
           '\\sigma', 'gamma': '\\gamma', 'lambda': '\\lambda'}
 
+# To make eval() less dangerous.
+_globals = {"__builtins__": None}
+_locals = {k: globals().get(k, None) for k in ['acos', 'asin', 'atan',
+                                               'ceil', 'cos', 'cosh',
+                                               'e', 'log', 'log10', 'pi',
+                                               'sin', 'sinh', 'sqrt', 'tan',
+                                               'tanh']}
+
 
 def _texify(name):
     """Convert a name to TeX format. Recognizes greek letters and a subscript.
@@ -75,8 +83,8 @@ class Calculation(object):
         :param comment: @todo
         """
         expr = str(expr)
-        value = eval(expr)
-        exec('{} = {}'.format(name, value), globals())
+        value = eval(expr, _globals, _locals)
+        exec('{} = {}'.format(name, value), _locals)
         n = ast.parse(expr)
         el = ['${}$ & = &'.format(_texify(name))]
         if type(n.body[0].value).__name__ == 'Num':
