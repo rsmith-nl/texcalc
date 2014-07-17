@@ -65,9 +65,8 @@ class Calculation(object):
 
     def __init__(self):
         """Initialize the calculation."""
-        self.prefix = [r'\begingroup\hspace{-\tabcolsep}'
-                       r'\begin{tabular}{lclcrl}']
-        self.suffix = [r'\end{tabular}\endgroup']
+        self.prefix = [r'$\begin{array}{lclcrl}']
+        self.suffix = [r'\end{array}$\hfill']
         self.lines = []
 
     def add(self, name, expr, unit=None, comment=None, fmt=".2f"):
@@ -84,20 +83,20 @@ class Calculation(object):
         value = eval(expr, _globals, _locals)
         exec('{} = {}'.format(name, value), _locals)
         n = ast.parse(expr)
-        el = ['${}$ & = &'.format(_texify(name))]
+        el = ['{} & = &'.format(_texify(name))]
         if type(n.body[0].value).__name__ == 'Num':
             el.append('& &')
         else:
             v = _LatexVisitor()
             v.visit(n)
-            el.append('${}$ & = &'.format(v.astex()))
+            el.append('\\displaystyle {} & = &'.format(v.astex()))
         if unit:
-            val = ''.join(['\\SI{{{:', fmt, '}}}', '{{', unit, '}}'])
+            val = ''.join(['\\mbox{{\\SI{{{:', fmt, '}}}', '{{', unit, '}}}}'])
         else:
-            val = ''.join(['\\num{{{:', fmt, '}}}'])
+            val = ''.join(['\\mbox{{\\num{{{:', fmt, '}}}}}'])
         el.append(val.format(value))
         if comment:
-            el += ['&', str(comment), r'\\']
+            el += ['&', '\\mbox{{{}}}'.format(str(comment)), r'\\']
         else:
             el.append(r'\\')
         self.lines.append(' '.join(el))
