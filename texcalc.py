@@ -137,6 +137,10 @@ class _LatexVisitor(ast.NodeVisitor):
     def visit_Expr(self, node):
         self.visit(node.value)
 
+    def visit_UnaryOp(self, node):
+        if isinstance(node.op, ast.Usub):
+            self.txtexpr.append('-')
+
     def visit_BinOp(self, node):
         if isinstance(node.op, ast.Div):
             self.txtexpr.append(r'\frac{')
@@ -146,7 +150,8 @@ class _LatexVisitor(ast.NodeVisitor):
             self.txtexpr.append(r'}')
             return
         if (isinstance(node.left, ast.BinOp) and
-           type(node.left.op).__name__ in ['Add', 'Sub']):
+           (type(node.left.op).__name__ in ['Add', 'Sub'] or
+           isinstance(node.op, ast.Pow))):
             self.txtexpr.append(r'\left(')
             self.visit(node.left)
             self.txtexpr.append(r'\right)')
@@ -154,7 +159,8 @@ class _LatexVisitor(ast.NodeVisitor):
             self.visit(node.left)
         self.visit(node.op)
         if (isinstance(node.right, ast.BinOp) and
-           type(node.right.op).__name__ in ['Add', 'Sub']):
+           (type(node.right.op).__name__ in ['Add', 'Sub'] or
+           isinstance(node.op, ast.Pow))):
             self.txtexpr.append(r'\left(')
             self.visit(node.right)
             self.txtexpr.append(r'\right)')
