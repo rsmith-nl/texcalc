@@ -151,18 +151,18 @@ class _LatexVisitor(ast.NodeVisitor):
         if (isinstance(node.left, ast.BinOp) and
            (type(node.left.op).__name__ in ['Add', 'Sub'] or
            isinstance(node.op, ast.Pow))):
-            self.txtexpr.append(r'\left(')
+            self.txtexpr.append(r'{\left(')
             self.visit(node.left)
-            self.txtexpr.append(r'\right)')
+            self.txtexpr.append(r'\right)}')
         else:
             self.visit(node.left)
         self.visit(node.op)
         if (isinstance(node.right, ast.BinOp) and
            (type(node.right.op).__name__ in ['Add', 'Sub'] or
            isinstance(node.op, ast.Pow))):
-            self.txtexpr.append(r'\left(')
+            self.txtexpr.append(r'{\left(')
             self.visit(node.right)
-            self.txtexpr.append(r'\right)')
+            self.txtexpr.append(r'\right)}')
         else:
             self.visit(node.right)
 
