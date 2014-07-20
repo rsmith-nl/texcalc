@@ -137,8 +137,9 @@ class _LatexVisitor(ast.NodeVisitor):
         self.visit(node.value)
 
     def visit_UnaryOp(self, node):
-        if isinstance(node.op, ast.Usub):
+        if isinstance(node.op, ast.USub):
             self.txtexpr.append('-')
+            self.visit(node.operand)
 
     def visit_BinOp(self, node):
         if isinstance(node.op, ast.Div):
