@@ -64,8 +64,9 @@ class Calculation(object):
     """Class to contain a set of coherent calculations."""
 
     def __init__(self):
-        """Initialize the calculation."""
-        self.prefix = [r'$\begin{array}{lclcrl}']
+        """Initialize the calculation.
+        """
+        self.prefix = [r'\hspace{-\arraycolsep}$\begin{array}{lclcrl}']
         self.suffix = [r'\end{array}$\hfill']
         self.lines = []
 
@@ -77,7 +78,7 @@ class Calculation(object):
                      python's math module.
         :param unit: Unit of the result in SIunitx format.
         :param fmt: Number format for the result. Defaults to '.2f'
-        :param comment: @todo
+        :param comment: Any comment string you want to append.
         """
         expr = str(expr)
         value = eval(expr, _globals, _locals)
