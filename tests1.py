@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # vim:fileencoding=utf-8
 # file: tests1.py
 #
@@ -11,7 +11,6 @@
 # related or neighboring rights to tests1.py. This work is published
 # from the Netherlands. See http://creativecommons.org/publicdomain/zero/1.0/
 
-from __future__ import division, print_function
 from texcalc import Calculation
 
 c = Calculation()

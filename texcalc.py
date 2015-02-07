@@ -66,8 +66,8 @@ class Calculation(object):
     def __init__(self):
         """Initialize the calculation.
         """
-        self.prefix = [r'\hspace{-\arraycolsep}$\begin{array}{lclcrl}']
-        self.suffix = [r'\end{array}$\hfill']
+        self.prefix = [r'\hspace{-\arraycolsep}{$\begin{array}{lclcrl}']
+        self.suffix = [r'\end{array}$}\hfill']
         self.lines = []
 
     def add(self, name, expr, unit=None, comment=None, fmt=".2f"):
@@ -80,6 +80,7 @@ class Calculation(object):
         :param fmt: Number format for the result. Defaults to '.2f'
         :param comment: Any comment string you want to append.
         """
+        extraline = False
         expr = str(expr)
         value = eval(expr, _globals, _locals)
         exec('{} = {}'.format(name, value), _locals)
@@ -91,6 +92,7 @@ class Calculation(object):
             v = _LatexVisitor()
             v.visit(n)
             el.append('\\displaystyle {} & = &'.format(v.astex()))
+            extraline = True
         if unit:
             val = ''.join(['\\mbox{{\\SI{{{:', fmt, '}}}', '{{', unit, '}}}}'])
         else:
@@ -100,7 +102,10 @@ class Calculation(object):
             el += ['&', '\\mbox{{{}}}'.format(str(comment)), r'\\']
         else:
             el.append(r'\\')
+        if extraline:
+            el.append(r'\\[-0.5em]')
         self.lines.append(' '.join(el))
+
 
     def __str__(self):
         """Create a string representation of the calculation.
@@ -117,6 +122,9 @@ class _LatexVisitor(ast.NodeVisitor):
     # Exceptions where TeX deviates from Python:
     _fnames['log'] = '\\ln'
     _fnames['log10'] = '\\log'
+    _fnames['asin'] = '\\arcsin'
+    _fnames['acos'] = '\\arccos'
+    _fnames['atan'] = '\\arctan'
     del(_fnames['e'])  # Not a special name in TeX.
 
     def __init__(self):
