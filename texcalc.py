@@ -106,7 +106,6 @@ class Calculation(object):
             el.append(r'\\[-0.5em]')
         self.lines.append(' '.join(el))
 
-
     def __str__(self):
         """Create a string representation of the calculation.
         :returns: string
