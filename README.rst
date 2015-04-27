@@ -20,7 +20,7 @@ important for me to be able to include them in the results.
 So I wrote a Python module called ``texcalc`` that allows me to do
 calculations and typesets the results for me. It works like this;
 
-. code-block:: python
+.. code-block:: python
 
     from __future__ import print_function
     from texcalc import Calculation
