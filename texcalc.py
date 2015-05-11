@@ -18,7 +18,7 @@ import ast
 # To make expressions more TeX-like, we make all the math functions available.
 import math
 
-__version__ = '$Revision$'[11:-2]
+__version__ = '0.9.0'
 
 _greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
           'Theta': '\\Theta', 'zeta': '\\zeta', 'Pi': '\\Pi', 'Iota':
