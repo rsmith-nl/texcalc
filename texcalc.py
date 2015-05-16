@@ -1,12 +1,29 @@
-# vim:fileencoding=utf-8
+# file: texcalc.py
+# vim:fileencoding=utf-8:ft=python
 #
-# Author: R.F. Smith <rsmith@xs4all.nl>
+# Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Modified: $Date$
+# Last modified: 2015-05-16 21:14:36 +0200
 #
-# To the extent possible under law, R.F. Smith has waived all copyright and
-# related or neighboring rights to texcalc.py. This work is published
-# from the Netherlands. See http://creativecommons.org/publicdomain/zero/1.0/
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+# OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
+# NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+# OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses exec(). It should therefore not be used with
@@ -18,7 +35,11 @@ import ast
 # To make expressions more TeX-like, we make all the math functions available.
 import math
 
-__version__ = '0.9.0'
+__title__ = 'texcalc'
+__version__ = '0.9.1'
+__author__ = 'Roland Smith'
+__license__ = 'BSD'
+__copyright__ = 'Copyright © 2014,2015 R.F. Smith'
 
 _greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
           'Theta': '\\Theta', 'zeta': '\\zeta', 'Pi': '\\Pi', 'Iota':
@@ -43,10 +64,14 @@ _locals = {k: eval('math.'+k) for k in _lnames}
 
 
 def _texify(name):
-    """Convert a name to TeX format. Recognizes greek letters and a subscript.
+    """
+    Convert a name to TeX format. Recognizes greek letters and a subscript.
 
-    :param name: String to be TeXified
-    :returns: Converted string.
+    Arguments:
+        name: A string to be TeXified.
+
+    Returns:
+        The converted string.
     """
     name = name.strip()
     items = name.split('_')
@@ -64,8 +89,6 @@ class Calculation(object):
     """Class to contain a set of coherent calculations."""
 
     def __init__(self):
-        """Initialize the calculation.
-        """
         self.prefix = [r'\hspace{-\arraycolsep}{$\begin{array}{lclcrl}']
         self.suffix = [r'\end{array}$}\hfill']
         self.lines = []
@@ -73,12 +96,13 @@ class Calculation(object):
     def add(self, name, expr, unit=None, comment=None, fmt=".2f"):
         """Add an equation to the calculation.
 
-        :param name: Name of the variable to assign the result to.
-        :param expr: Python expression or number. Can contain functions from
-                     python's math module.
-        :param unit: Unit of the result in SIunitx format.
-        :param fmt: Number format for the result. Defaults to '.2f'
-        :param comment: Any comment string you want to append.
+        Arguments:
+            name: Name of the variable to assign the result to.
+            expr: Python expression or number. Can contain functions from
+                python's math module.
+            unit: Unit of the result in SIunitx format.
+            fmt: Number format for the result. Defaults to '.2f'
+            comment: Any comment string you want to append.
         """
         extraline = False
         expr = str(expr)
@@ -107,15 +131,18 @@ class Calculation(object):
         self.lines.append(' '.join(el))
 
     def __str__(self):
-        """Create a string representation of the calculation.
-        :returns: string
+        """
+        Create a string representation of the calculation.
+
+        Returns:
+            The calculation in the form of a string.
         """
         total = self.prefix + self.lines + self.suffix
         return '\n'.join(total)
 
 
 class _LatexVisitor(ast.NodeVisitor):
-    """ example recursive visitor """
+    """Recursive visitor for LaTeX."""
 
     _fnames = {k: '\\{}'.format(k) for k in _lnames}
     # Exceptions where TeX deviates from Python:
@@ -210,5 +237,5 @@ class _LatexVisitor(ast.NodeVisitor):
         self.txtexpr.append(')')
 
     def visit_Div(self, node):
-        '''Handled at the BinOp level, so pass.'''
+        '''Handled at the BinOp level.'''
         pass
