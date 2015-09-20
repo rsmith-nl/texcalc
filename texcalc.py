@@ -3,7 +3,7 @@
 #
 # Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Last modified: 2015-05-16 21:14:36 +0200
+# Last modified: 2015-09-20 16:49:23 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,17 +29,10 @@
 Note that this module uses exec(). It should therefore not be used with
 untrusted input."""
 
-from __future__ import division, print_function
+__version__ = '0.9.2'
+
 import ast
-
-# To make expressions more TeX-like, we make all the math functions available.
 import math
-
-__title__ = 'texcalc'
-__version__ = '0.9.1'
-__author__ = 'Roland Smith'
-__license__ = 'BSD'
-__copyright__ = 'Copyright © 2014,2015 R.F. Smith'
 
 _greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
           'Theta': '\\Theta', 'zeta': '\\zeta', 'Pi': '\\Pi', 'Iota':
