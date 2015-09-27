@@ -3,7 +3,7 @@
 #
 # Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Last modified: 2015-09-27 13:24:40 +0200
+# Last modified: 2015-09-27 16:55:58 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -26,8 +26,8 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """Module to do and print calculations. Prints formatted statements.
-Note that this module uses exec(). It should therefore not be used with
-untrusted input."""
+Note that this module uses both eval() and exec().
+It should therefore not be used with untrusted input."""
 
 __version__ = '0.9.3'
 
@@ -183,12 +183,16 @@ class _LatexVisitor(ast.NodeVisitor):
             return
         if isinstance(node.op, ast.Pow):
             if isinstance(node.left, ast.BinOp):
-                wrap(node.left)
+                self.txtexpr.append(r'{')
+                self.visit(node.left)
+                self.txtexpr.append(r'}')
             else:
                 self.visit(node.left)
             self.visit(node.op)
             if isinstance(node.right, ast.BinOp):
-                wrap(node.right)
+                self.txtexpr.append(r'{')
+                self.visit(node.right)
+                self.txtexpr.append(r'}')
             else:
                 self.visit(node.right)
             return
