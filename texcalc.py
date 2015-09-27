@@ -3,7 +3,7 @@
 #
 # Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Last modified: 2015-09-20 16:49:23 +0200
+# Last modified: 2015-09-27 13:24:40 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
 Note that this module uses exec(). It should therefore not be used with
 untrusted input."""
 
-__version__ = '0.9.2'
+__version__ = '0.9.3'
 
 import ast
 import math
@@ -170,6 +170,10 @@ class _LatexVisitor(ast.NodeVisitor):
             self.visit(node.operand)
 
     def visit_BinOp(self, node):
+        def wrap(nd):
+            self.txtexpr.append(r'{\left(')
+            self.visit(nd)
+            self.txtexpr.append(r'\right)}')
         if isinstance(node.op, ast.Div):
             self.txtexpr.append(r'\frac{')
             self.visit(node.left)
@@ -177,22 +181,32 @@ class _LatexVisitor(ast.NodeVisitor):
             self.visit(node.right)
             self.txtexpr.append(r'}')
             return
-        if (isinstance(node.left, ast.BinOp) and
-           (type(node.left.op).__name__ in ['Add', 'Sub'] or
-           isinstance(node.op, ast.Pow))):
-            self.txtexpr.append(r'{\left(')
-            self.visit(node.left)
-            self.txtexpr.append(r'\right)}')
+        if isinstance(node.op, ast.Pow):
+            if isinstance(node.left, ast.BinOp):
+                wrap(node.left)
+            else:
+                self.visit(node.left)
+            self.visit(node.op)
+            if isinstance(node.right, ast.BinOp):
+                wrap(node.right)
+            else:
+                self.visit(node.right)
+            return
+        if isinstance(node.op, ast.Mult):
+            if (isinstance(node.left, ast.BinOp) and
+               isinstance(node.left.op, (ast.Add, ast.Sub))):
+                wrap(node.left)
+            else:
+                self.visit(node.left)
+            self.visit(node.op)
+            if (isinstance(node.right, ast.BinOp) and
+               isinstance(node.right.op, (ast.Add, ast.Sub))):
+                wrap(node.right)
+            else:
+                self.visit(node.right)
         else:
             self.visit(node.left)
-        self.visit(node.op)
-        if (isinstance(node.right, ast.BinOp) and
-           (type(node.right.op).__name__ in ['Add', 'Sub'] or
-           isinstance(node.op, ast.Pow))):
-            self.txtexpr.append(r'{\left(')
-            self.visit(node.right)
-            self.txtexpr.append(r'\right)}')
-        else:
+            self.visit(node.op)
             self.visit(node.right)
 
     def visit_Name(self, node):
