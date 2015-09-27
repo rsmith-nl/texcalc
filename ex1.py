@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # vim:fileencoding=utf-8
-# file: tests1.py
+# file: ex1.py
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2014-07-06 22:53:36 +0200
@@ -22,6 +22,4 @@ c.add('t_f', 'W_f/(10000*rho_f)*10', 'mm')
 c.add('t', 't_f/v_f', 'mm', "Laminate thickness")
 c.add('t_r', 't-t_f', 'mm')
 c.add('W_r', 't_f/10*(10000*rho_r)', 'g/m^2', "Area weight resin")
-c.add('Q', '(3.24-2)*(12-9)')
-c.add('W', '(3.24*2)*(12-9)')
 print(c)
