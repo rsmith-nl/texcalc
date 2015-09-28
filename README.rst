@@ -26,15 +26,14 @@ calculations and typesets the results for me. It works like this;
     from texcalc import Calculation
 
     c = Calculation()
-    c.add('rho_f', 2.62, 'g/cm^3', 'fiber density')
-    c.add('W_f', 450, 'g/cm^2', 'fiber area weight', fmt='.0f')
-    c.add('v_f', 0.3, '-', 'fiber volume fraction')
-    c.add('rho_m', 1.15, 'g/cm^3', 'matrix density')
-    c.add('t_f', 'W_f*10/(10000*rho_f)', 'mm', 'fiber “thickness”')
-    c.add('t', 't_f/v_f', 'mm', 'laminate thickness')
-    c.add('t_m', 't-t_f', 'mm', 'resin “thickness”')
-    c.add('W_m', 't_m/10*rho_m*10000', 'g/m^2', 'resin area weight', fmt='.0f')
-    c.add('w_f', 'W_f/(W_f+W_m)', '-', 'fiber weight fraction')
+    c.add('rho_f', '1.62', 'g/cm^3', 'Fiber density')
+    c.add('rho_r', '1.2', 'g/cm^3', "Resin density")
+    c.add('v_f', '0.3', '-', 'Fiber volume fraction')
+    c.add('W_f', '450', 'g/m^2', "Area weight fibers")
+    c.add('t_f', 'W_f/(10000*rho_f)*10', 'mm')
+    c.add('t', 't_f/v_f', 'mm', "Laminate thickness")
+    c.add('t_r', 't-t_f', 'mm')
+    c.add('W_r', 't_f/10*(10000*rho_r)', 'g/m^2', "Area weight resin")
     print(c)
 
 Using a ``Calculation`` object one can define a sequence of variable
@@ -47,7 +46,7 @@ up to use a decimal comma in this example);
 
 .. _array: http://latex.wikia.com/wiki/Array_%28LaTeX_environment%29
 
-.. image:: images/texcalc-example.png
+.. image:: examples/example.png
     :alt: texcalc example
     :width: 100%
 
