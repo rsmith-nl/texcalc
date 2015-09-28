@@ -1,9 +1,9 @@
 # file: tests.py
-# vim:fileencoding=utf-8:ft=python
+# vim:fileencoding=utf-8:ft=python:fdm=indent
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-09-27 15:46:26 +0200
-# Last modified: 2015-09-27 16:51:01 +0200
+# Last modified: 2015-09-28 20:44:16 +0200
 #
 # To the extent possible under law, R.F. Smith has waived all copyright and
 # related or neighboring rights to tests.py. This work is published
