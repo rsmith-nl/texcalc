@@ -3,7 +3,7 @@
 #
 # Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Last modified: 2015-09-28 20:43:58 +0200
+# Last modified: 2015-10-11 20:12:16 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
 
-__version__ = '0.9.3'
+__version__ = '0.10.0'
 
 import ast
 import math
@@ -82,8 +82,8 @@ class Calculation(object):
     """Class to contain a set of coherent calculations."""
 
     def __init__(self):
-        self.prefix = [r'\hspace{-\arraycolsep}{$\begin{array}{lclcrl}']
-        self.suffix = [r'\end{array}$}\hfill']
+        self.prefix = [r'\begin{align*}']
+        self.suffix = [r'\end{align*}']
         self.lines = []
 
     def add(self, name, expr, unit=None, comment=None, fmt=".2f"):
@@ -102,25 +102,24 @@ class Calculation(object):
         value = eval(expr, _globals, _locals)
         exec('{} = {}'.format(name, value), _locals)
         n = ast.parse(expr)
-        el = ['{} & = &'.format(_texify(name))]
+        el = ['{} &='.format(_texify(name))]
         if type(n.body[0].value).__name__ == 'Num':
-            el.append('& &')
+            el.append('&&=')
         else:
             v = _LatexVisitor()
             v.visit(n)
-            el.append('\\displaystyle {} & = &'.format(v.astex()))
+            el.append('\\displaystyle {} &&='.format(v.astex()))
             extraline = True
         if unit:
-            val = ''.join(['\\mbox{{\\SI{{{:', fmt, '}}}', '{{', unit, '}}}}'])
+            val = ''.join(['\\text{{\\SI{{{:', fmt, '}}}', '{{', unit, '}}}}'])
         else:
-            val = ''.join(['\\mbox{{\\num{{{:', fmt, '}}}}}'])
+            val = ''.join(['\\text{{\\num{{{:', fmt, '}}}}}'])
         el.append(val.format(value))
         if comment:
-            el += ['&', '\\mbox{{{}}}'.format(str(comment)), r'\\']
+            el += ['&&', '\\text{{{}}}'.format(str(comment)),
+                   r'\displaybreak[0]\\']
         else:
-            el.append(r'\\')
-        if extraline:
-            el.append(r'\\[-0.5em]')
+            el.append(r'\displaybreak[0]\\')
         self.lines.append(' '.join(el))
 
     def __str__(self):
