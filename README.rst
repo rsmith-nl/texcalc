@@ -44,26 +44,29 @@ When this is written to a file it can be included in a LaTeX document using
     :alt: texcalc example
     :width: 100%
 
-It uses the siunitx_ package to typeset the units of the variables and
-calculation results.  It uses ``\mbox`` to include plain text in the otherwise
-math-mode ``array`` environment.  This means that the comments should be kept
-reasonably short so they fit one one line.  The generated LaTeX code (shown
-below) isn't set up to handle comments that would span multiple lines.
+It uses the ``align*`` environment from the amsmath_ package to typeset the
+whole set of equations. The units and values of the variables and results are
+set using the siunitx_ package.  It uses ``\text`` to include plain text in
+the otherwise math-mode ``align*`` environment.  This means that the comments
+should be kept reasonably short so they fit one one line.  The generated LaTeX
+code (shown below) isn't set up to handle comments that would span multiple
+lines.
 
+.. _amsmath: http://ctan.org/pkg/amsmath
 .. _siunitx: http://ctan.org/pkg/siunitx
 
 .. code-block:: latex
 
-    \hspace{-\arraycolsep}{$\begin{array}{lclcrl}
-    \rho_f & = & & & \mbox{\SI{1.62}{g/cm^3}} & \mbox{Fiber density} \\
-    \rho_r & = & & & \mbox{\SI{1.20}{g/cm^3}} & \mbox{Resin density} \\
-    v_f & = & & & \mbox{\SI{0.30}{-}} & \mbox{Fiber volume fraction} \\
-    W_f & = & & & \mbox{\SI{450}{g/m^2}} & \mbox{Area weight fibers} \\
-    t_f & = & \displaystyle \frac{W_f}{10000\cdot \rho_f}\cdot 10 & = & \mbox{\SI{0.28}{mm}} \\ \\[-0.5em]
-    t & = & \displaystyle \frac{t_f}{v_f} & = & \mbox{\SI{0.93}{mm}} & \mbox{Laminate thickness} \\ \\[-0.5em]
-    t_r & = & \displaystyle t-t_f & = & \mbox{\SI{0.65}{mm}} \\ \\[-0.5em]
-    W_r & = & \displaystyle \frac{t_f}{10}\cdot 10000\cdot \rho_r & = & \mbox{\SI{333}{g/m^2}} & \mbox{Area weight resin} \\ \\[-0.5em]
-    \end{array}$}\hfill
+    \begin{align*}
+    \rho_f &= &&= \text{\SI{1.62}{g/cm^3}} && \text{Fiber density} \displaybreak[0]\\
+    \rho_r &= &&= \text{\SI{1.20}{g/cm^3}} && \text{Resin density} \displaybreak[0]\\
+    v_f &= &&= \text{\SI{0.30}{-}} && \text{Fiber volume fraction} \displaybreak[0]\\
+    W_f &= &&= \text{\SI{450}{g/m^2}} && \text{Area weight fibers} \displaybreak[0]\\
+    t_f &= \displaystyle \frac{W_f}{10000\cdot \rho_f}\cdot 10 &&= \text{\SI{0.28}{mm}} \displaybreak[0]\\
+    t &= \displaystyle \frac{t_f}{v_f} &&= \text{\SI{0.93}{mm}} && \text{Laminate thickness} \displaybreak[0]\\
+    t_r &= \displaystyle t-t_f &&= \text{\SI{0.65}{mm}} \displaybreak[0]\\
+    W_r &= \displaystyle \frac{t_f}{10}\cdot 10000\cdot \rho_r &&= \text{\SI{333}{g/m^2}} && \text{Area weight resin} \displaybreak[0]\\
+    \end{align*}
 
 .. Note::
 
