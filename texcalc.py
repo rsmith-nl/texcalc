@@ -3,7 +3,7 @@
 #
 # Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Last modified: 2015-10-11 20:12:16 +0200
+# Last modified: 2015-10-13 21:22:12 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
 
-__version__ = '0.10.0'
+__version__ = '0.10.1'
 
 import ast
 import math
@@ -129,6 +129,8 @@ class Calculation(object):
         Returns:
             The calculation in the form of a string.
         """
+        if self.lines and self.lines[-1].endswith(r'\\'):
+            self.lines[-1] = self.lines[-1][:-2]
         total = self.prefix + self.lines + self.suffix
         return '\n'.join(total)
 
