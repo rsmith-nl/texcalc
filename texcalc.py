@@ -3,7 +3,7 @@
 #
 # Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Last modified: 2015-10-13 21:22:12 +0200
+# Last modified: 2015-10-13 23:01:29 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
 
-__version__ = '0.10.1'
+__version__ = '0.11.0'
 
 import ast
 import math
@@ -81,12 +81,18 @@ def _texify(name):
 class Calculation(object):
     """Class to contain a set of coherent calculations."""
 
-    def __init__(self):
+    def __init__(self, fmt=".2f"):
+        """Initialize a Calculation.
+
+        Arguments:
+            fmt: standard format to use for numbers. Defaults to “.2f”.
+        """
+        self.fmt = fmt
         self.prefix = [r'\begin{align*}']
         self.suffix = [r'\end{align*}']
         self.lines = []
 
-    def add(self, name, expr, unit=None, comment=None, fmt=".2f"):
+    def add(self, name, expr, unit=None, comment=None, fmt=None):
         """Add an equation to the calculation.
 
         Arguments:
@@ -94,9 +100,12 @@ class Calculation(object):
             expr: Python expression or number. Can contain functions from
                 python's math module.
             unit: Unit of the result in SIunitx format.
-            fmt: Number format for the result. Defaults to '.2f'
+            fmt: Number format for the result. Default is given during
+                creation of the Calculation object.
             comment: Any comment string you want to append.
         """
+        if not fmt:
+            fmt = self.fmt
         extraline = False
         expr = str(expr)
         value = eval(expr, _globals, _locals)
