@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-09-27 15:46:26 +0200
-# Last modified: 2015-10-24 16:17:12 +0200
+# Last modified: 2015-10-24 16:27:48 +0200
 #
 # To the extent possible under law, R.F. Smith has waived all copyright and
 # related or neighboring rights to tests.py. This work is published
@@ -45,10 +45,10 @@ def test_prec():
     runvisitor('1/2+3', r'\frac{1}{2}+3')
     runvisitor('1/(2+3)', r'\frac{1}{2+3}')
     runvisitor('(2+3)/21', r'\frac{2+3}{21}')
-    runvisitor('2**(3+2)', r'2^{\left(3+2\right)}')
-    runvisitor('2**(3+2/7)', r'2^{\left(3+\frac{2}{7}\right)}')
+    runvisitor('2**(3+2)', r'2^{3+2}')
+    runvisitor('2**(3+2/7)', r'2^{3+\frac{2}{7}}')
     runvisitor('(2+7)*5', r'{\left(2+7\right)}\cdot 5')
-    runvisitor('54**((2+7)*5)', r'54^{\left({\left(2+7\right)}\cdot 5\right)}')
+    runvisitor('54**((2+7)*5)', r'54^{{\left(2+7\right)}\cdot 5}')
 
 
 def test_builtins():
