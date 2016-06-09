@@ -1,6 +1,9 @@
 the TeXcalc module
 ##################
 
+Introduction
+------------
+
 As an engineer, I often do diverse calculations that I want to save in my
 logbooks which I write in LaTeX.  Up to now I've either formatted those by
 hand or used the ``listings`` package to include calculations made in IPython.
@@ -12,6 +15,10 @@ calculations without explanations or units, and the results aren't always
 nicely formatted. Technical calculations without units are generally
 meaningless, so it was important for me to be able to include them in the
 results.
+
+
+How it works
+------------
 
 So I wrote a Python module called ``texcalc`` that allows me to do
 calculations and typesets the results for me. It works like this;
@@ -73,3 +80,11 @@ lines.
     This module uses ``eval`` and ``exec``, which exposes the full
     capabilities of the Python interpreter. This module should therefore _not_
     be used with untrusted input!
+
+
+Tests
+-----
+
+The file ``tests.py`` contains the tests for this code. You can run the tests
+with ``py.test -v tests.py``.
+
