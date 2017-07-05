@@ -3,7 +3,7 @@
 #
 # Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Last modified: 2015-10-24 16:25:28 +0200
+# Last modified: 2017-07-06 00:42:04 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,10 +29,10 @@
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
 
-__version__ = '0.11.0'
-
 import ast
-import math
+import math  # noqa
+
+__version__ = '0.12.0'
 
 _greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
           'Theta': '\\Theta', 'zeta': '\\zeta', 'Pi': '\\Pi', 'Iota':
@@ -52,7 +52,7 @@ _greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
 # To make eval() less dangerous.
 _globals = {"__builtins__": None}
 _lnames = ('acos', 'asin', 'atan', 'ceil', 'cos', 'cosh', 'e', 'log', 'log10',
-           'pi', 'sin', 'sinh', 'sqrt', 'tan', 'tanh')
+           'pi', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'radians')
 _locals = {k: eval('math.'+k) for k in _lnames}
 
 
@@ -106,7 +106,6 @@ class Calculation(object):
         """
         if not fmt:
             fmt = self.fmt
-        extraline = False
         expr = str(expr)
         value = eval(expr, _globals, _locals)
         exec('{} = {}'.format(name, value), _locals)
@@ -118,12 +117,12 @@ class Calculation(object):
             v = _LatexVisitor()
             v.visit(n)
             el.append('\\displaystyle {} &&='.format(v.astex()))
-            extraline = True
+        fn = ''.join([r'{:', fmt, r'}']).format(value)
         if unit:
-            val = ''.join(['\\text{{\\SI{{{:', fmt, '}}}', '{{', unit, '}}}}'])
+            val = ''.join([r'\text{\SI{', fn, r'}', r'{', unit, r'}}'])
         else:
-            val = ''.join(['\\text{{\\num{{{:', fmt, '}}}}}'])
-        el.append(val.format(value))
+            val = ''.join([r'\text{\num{', fn, r'}}'])
+        el.append(val)
         if comment:
             el += ['&&', '\\text{{{}}}'.format(str(comment)),
                    r'\displaybreak[0]\\']
@@ -154,6 +153,7 @@ class _LatexVisitor(ast.NodeVisitor):
     _fnames['asin'] = '\\arcsin'
     _fnames['acos'] = '\\arccos'
     _fnames['atan'] = '\\arctan'
+    _fnames['radians'] = 'radians'
     del(_fnames['e'])  # Not a special name in TeX.
 
     def __init__(self):
