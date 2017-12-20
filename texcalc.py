@@ -1,9 +1,9 @@
 # file: texcalc.py
 # vim:fileencoding=utf-8:ft=python:fdm=indent
 #
-# Copyright © 2014,2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-05-04 11:28:35 +0200
-# Last modified: 2017-07-06 00:42:04 +0200
+# Last modified: 2017-12-20 23:42:21 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@ It should therefore not be used with untrusted input."""
 import ast
 import math  # noqa
 
-__version__ = '0.12.0'
+__version__ = '1.0'
 
 _greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
           'Theta': '\\Theta', 'zeta': '\\zeta', 'Pi': '\\Pi', 'Iota':
@@ -80,6 +80,8 @@ def _texify(name):
 
 class Calculation(object):
     """Class to contain a set of coherent calculations."""
+
+    __slots__ = ('fmt', 'prefix', 'suffix', 'lines')
 
     def __init__(self, fmt=".2f"):
         """Initialize a Calculation.
@@ -146,6 +148,7 @@ class Calculation(object):
 class _LatexVisitor(ast.NodeVisitor):
     """Recursive visitor for LaTeX."""
 
+    __slots__ = ('txtexpr', 'target')
     _fnames = {k: '\\{}'.format(k) for k in _lnames}
     # Exceptions where TeX deviates from Python:
     _fnames['log'] = '\\ln'
