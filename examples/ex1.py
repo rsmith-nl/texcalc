@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-# vim:fileencoding=utf-8
 # file: ex1.py
+# vim:fileencoding=utf-8:fdm=marker:ft=python
 #
-# Author: R.F. Smith <rsmith@xs4all.nl>
-# Created: 2014-07-06 22:53:36 +0200
-# Last modified: 2015-09-28 21:46:00 +0200
-#
-# To the extent possible under law, R.F. Smith has waived all copyright and
-# related or neighboring rights to tests1.py. This work is published
-# from the Netherlands. See http://creativecommons.org/publicdomain/zero/1.0/
+# Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>.
+# SPDX-License-Identifier: MIT
+# Created: 2014-07-06T22:53:36+0200
+# Last modified: 2018-04-17T21:31:26+0200
 
 from texcalc import Calculation
 

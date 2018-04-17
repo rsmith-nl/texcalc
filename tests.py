@@ -1,13 +1,10 @@
 # file: tests.py
-# vim:fileencoding=utf-8:ft=python:fdm=indent
+# vim:fileencoding=utf-8:fdm=marker:ft=python
 #
-# Author: R.F. Smith <rsmith@xs4all.nl>
-# Created: 2015-09-27 15:46:26 +0200
-# Last modified: 2016-06-09 23:53:02 +0200
-#
-# To the extent possible under law, R.F. Smith has waived all copyright and
-# related or neighboring rights to tests.py. This work is published
-# from the Netherlands. See http://creativecommons.org/publicdomain/zero/1.0/
+# Copyright © 2015-2016 R.F. Smith <rsmith@xs4all.nl>.
+# SPDX-License-Identifier: MIT
+# Created: 2015-09-27T15:48:12+0200
+# Last modified: 2018-04-17T21:30:28+0200
 
 """Nose tests for texcalc."""
 
