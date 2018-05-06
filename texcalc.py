@@ -14,26 +14,64 @@ import math  # noqa
 
 __version__ = '1.0'
 
-_greek = {'tau': '\\tau', 'xi': '\\xi', 'Chi': '\\Chi', 'alpha': '\\alpha',
-          'Theta': '\\Theta', 'zeta': '\\zeta', 'Pi': '\\Pi', 'Iota':
-          '\\Iota', 'Phi': '\\Phi', 'Psi': '\\Psi', 'Sigma': '\\Sigma', 'chi':
-          '\\chi', 'Omicron': '\\Omicron', 'Nu': '\\Nu', 'Beta': '\\Beta',
-          'Rho': '\\Rho', 'Delta': '\\Delta', 'theta': '\\theta', 'pi':
-          '\\pi', 'Omega': '\\Omega', 'nu': '\\nu', 'phi': '\\phi', 'psi':
-          '\\psi', 'Kappa': '\\Kappa', 'Upsilon': '\\Upsilon', 'epsilon':
-          '\\epsilon', 'omicron': '\\omicron', 'Mu': '\\Mu', 'Alpha':
-          '\\Alpha', 'beta': '\\beta', 'Eta': '\\Eta', 'rho': '\\rho',
-          'delta': '\\delta', 'upsilon': '\\upsilon', 'omega': '\\omega',
-          'Gamma': '\\Gamma', 'Lambda': '\\Lambda', 'Tau': '\\Tau', 'Xi':
-          '\\Xi', 'kappa': '\\kappa', 'iota': '\\iota', 'mu': '\\mu', 'eta':
-          '\\eta', 'Epsilon': '\\Epsilon', 'Zeta': '\\Zeta', 'sigma':
-          '\\sigma', 'gamma': '\\gamma', 'lambda': '\\lambda'}
+_greek = {
+    'tau': '\\tau',
+    'xi': '\\xi',
+    'Chi': '\\Chi',
+    'alpha': '\\alpha',
+    'Theta': '\\Theta',
+    'zeta': '\\zeta',
+    'Pi': '\\Pi',
+    'Iota': '\\Iota',
+    'Phi': '\\Phi',
+    'Psi': '\\Psi',
+    'Sigma': '\\Sigma',
+    'chi': '\\chi',
+    'Omicron': '\\Omicron',
+    'Nu': '\\Nu',
+    'Beta': '\\Beta',
+    'Rho': '\\Rho',
+    'Delta': '\\Delta',
+    'theta': '\\theta',
+    'pi': '\\pi',
+    'Omega': '\\Omega',
+    'nu': '\\nu',
+    'phi': '\\phi',
+    'psi': '\\psi',
+    'Kappa': '\\Kappa',
+    'Upsilon': '\\Upsilon',
+    'epsilon': '\\epsilon',
+    'omicron': '\\omicron',
+    'Mu': '\\Mu',
+    'Alpha': '\\Alpha',
+    'beta': '\\beta',
+    'Eta': '\\Eta',
+    'rho': '\\rho',
+    'delta': '\\delta',
+    'upsilon': '\\upsilon',
+    'omega': '\\omega',
+    'Gamma': '\\Gamma',
+    'Lambda': '\\Lambda',
+    'Tau': '\\Tau',
+    'Xi': '\\Xi',
+    'kappa': '\\kappa',
+    'iota': '\\iota',
+    'mu': '\\mu',
+    'eta': '\\eta',
+    'Epsilon': '\\Epsilon',
+    'Zeta': '\\Zeta',
+    'sigma': '\\sigma',
+    'gamma': '\\gamma',
+    'lambda': '\\lambda'
+}
 
 # To make eval() less dangerous.
 _globals = {"__builtins__": None}
-_lnames = ('acos', 'asin', 'atan', 'ceil', 'cos', 'cosh', 'e', 'log', 'log10',
-           'pi', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'radians')
-_locals = {k: eval('math.'+k) for k in _lnames}
+_lnames = (
+    'acos', 'asin', 'atan', 'ceil', 'cos', 'cosh', 'e', 'log', 'log10', 'pi', 'sin', 'sinh',
+    'sqrt', 'tan', 'tanh', 'radians'
+)
+_locals = {k: eval('math.' + k) for k in _lnames}
 
 
 def _texify(name):
@@ -106,8 +144,7 @@ class Calculation(object):
             val = ''.join([r'\text{\num{', fn, r'}}'])
         el.append(val)
         if comment:
-            el += ['&&', '\\text{{{}}}'.format(str(comment)),
-                   r'\displaybreak[0]\\']
+            el += ['&&', '\\text{{{}}}'.format(str(comment)), r'\displaybreak[0]\\']
         else:
             el.append(r'\displaybreak[0]\\')
         self.lines.append(' '.join(el))
@@ -137,7 +174,7 @@ class _LatexVisitor(ast.NodeVisitor):
     _fnames['acos'] = '\\arccos'
     _fnames['atan'] = '\\arctan'
     _fnames['radians'] = 'radians'
-    del(_fnames['e'])  # Not a special name in TeX.
+    del (_fnames['e'])  # Not a special name in TeX.
 
     def __init__(self):
         self.txtexpr = []
@@ -163,10 +200,12 @@ class _LatexVisitor(ast.NodeVisitor):
             self.visit(node.operand)
 
     def visit_BinOp(self, node):
+
         def wrap(nd):
             self.txtexpr.append(r'{\left(')
             self.visit(nd)
             self.txtexpr.append(r'\right)}')
+
         if isinstance(node.op, ast.Div):
             self.txtexpr.append(r'\frac{')
             self.visit(node.left)
@@ -188,14 +227,15 @@ class _LatexVisitor(ast.NodeVisitor):
                 self.visit(node.right)
             return
         if isinstance(node.op, ast.Mult):
-            if (isinstance(node.left, ast.BinOp) and
-               isinstance(node.left.op, (ast.Add, ast.Sub))):
+            if (isinstance(node.left, ast.BinOp) and isinstance(node.left.op, (ast.Add, ast.Sub))):
                 wrap(node.left)
             else:
                 self.visit(node.left)
             self.visit(node.op)
-            if (isinstance(node.right, ast.BinOp) and
-               isinstance(node.right.op, (ast.Add, ast.Sub))):
+            if (
+                isinstance(node.right, ast.BinOp) and
+                isinstance(node.right.op, (ast.Add, ast.Sub))
+            ):
                 wrap(node.right)
             else:
                 self.visit(node.right)

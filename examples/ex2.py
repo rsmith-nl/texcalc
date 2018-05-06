@@ -10,7 +10,6 @@
 
 from texcalc import Calculation
 
-
 tb = r"""Properties of \SI{0.75}{in} thick sandwich panels:"""
 print(tb)
 print('')
