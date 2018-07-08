@@ -4,7 +4,7 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2018-04-17T21:33:59+0200
+# Last modified: 2018-07-08T12:48:16+0200
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
@@ -128,9 +128,9 @@ class Calculation(object):
             fmt = self.fmt
         expr = str(expr)
         value = eval(expr, _globals, _locals)
-        exec('{} = {}'.format(name, value), _locals)
+        exec(f'{name} = {value}', _locals)
         n = ast.parse(expr)
-        el = ['{} &='.format(_texify(name))]
+        el = [_texify(name) + ' &=']
         if type(n.body[0].value).__name__ == 'Num':
             el.append('&&=')
         else:
@@ -166,7 +166,7 @@ class _LatexVisitor(ast.NodeVisitor):
     """Recursive visitor for LaTeX."""
 
     __slots__ = ('txtexpr', 'target')
-    _fnames = {k: '\\{}'.format(k) for k in _lnames}
+    _fnames = {k: f'\\{k}' for k in _lnames}
     # Exceptions where TeX deviates from Python:
     _fnames['log'] = '\\ln'
     _fnames['log10'] = '\\log'
