@@ -4,7 +4,7 @@
 # Copyright © 2015-2016 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2015-09-27T15:48:12+0200
-# Last modified: 2018-04-17T21:30:28+0200
+# Last modified: 2020-07-28T01:27:23+0200
 """Nose tests for texcalc."""
 
 from texcalc import _LatexVisitor
@@ -29,7 +29,7 @@ def test_simple():
     """Test simple expressions."""
     runvisitor('1 + 2', '1+2')
     runvisitor('1 - 2', '1-2')
-    runvisitor('1*2', '1\cdot 2')
+    runvisitor('1*2', r'1\cdot 2')
     runvisitor('1/2', r'\frac{1}{2}')
 
 
