@@ -17,6 +17,10 @@ meaningless, so it was important for me to be able to include them in the
 results.
 
 
+.. note:: The ``experimental`` branch contains the new version 2 API, which
+   I think is more Pythonic. After some more testing it will replace this API.
+
+
 How it works
 ------------
 
