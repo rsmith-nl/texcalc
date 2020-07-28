@@ -4,12 +4,13 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2020-07-28T16:07:35+0200
+# Last modified: 2020-07-28T21:15:17+0200
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
 
 import ast
+import sys
 from math import (  # noqa
     acos, asin, atan, ceil, cos, cosh, e, log, log10, pi, sin, sinh, sqrt, tan, tanh, radians
 )
@@ -38,12 +39,13 @@ def line(name, expr, unit=None, comment=None, fmt=None):
             creation of the Calculation object.
         comment: Any comment string you want to append.
     """
+    module_namespace = sys._getframe(1).f_globals
     if not fmt:
         fmt = ".2f"
     expr = str(expr)
-    value = eval(expr, globals())
+    value = eval(expr, module_namespace)
     if name is not None:
-        exec(f'{name} = {value}', globals())
+        exec(f'{name} = {value}', module_namespace)
         el = [_texify(name) + ' &=&']
     else:
         el = [' &&']
