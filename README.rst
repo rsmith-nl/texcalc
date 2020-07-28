@@ -90,6 +90,11 @@ aforementioned template is shown below.
     :alt: texcalc example
     :width: 100%
 
+As shown in this example, transliterated greek letters are converted to their
+proper typeset greek letters. (Also for upper case, so ``delta`` produces
+δ and ``Delta`` produces Δ.) In a similar way, underscores are used as
+a prefix for subscripts.
+
 .. Note::
 
     This module uses ``eval`` and ``exec``, which exposes the full
