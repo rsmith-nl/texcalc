@@ -4,16 +4,73 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2018-07-08T12:48:16+0200
+# Last modified: 2020-07-28T16:07:35+0200
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
 
 import ast
-import math  # noqa
+from math import (  # noqa
+    acos, asin, atan, ceil, cos, cosh, e, log, log10, pi, sin, sinh, sqrt, tan, tanh, radians
+)
 
-__version__ = '1.0'
+__version__ = '2.0'
 
+
+def header():
+    print(r'\begin{align*}')
+
+
+def footer():
+    print(r'\end{align*}')
+
+
+def line(name, expr, unit=None, comment=None, fmt=None):
+    """Add an equation to the calculation.
+
+    Arguments:
+        name: Name of the variable to assign the result to.
+            May be None, in which case the result is not assigned.
+        expr: Python expression or number. Can contain functions from
+            python's math module.
+        unit: Unit of the result in SIunitx format.
+        fmt: Number format for the result. Default is given during
+            creation of the Calculation object.
+        comment: Any comment string you want to append.
+    """
+    if not fmt:
+        fmt = ".2f"
+    expr = str(expr)
+    value = eval(expr, globals())
+    if name is not None:
+        exec(f'{name} = {value}', globals())
+        el = [_texify(name) + ' &=&']
+    else:
+        el = [' &&']
+    n = ast.parse(expr)
+    if type(n.body[0].value).__name__ == 'Num':
+        el.append('&&=&')
+    else:
+        v = _LatexVisitor()
+        v.visit(n)
+        el.append('\\displaystyle {} &&=&'.format(v.astex()))
+    fn = ''.join([r'{:', fmt, r'}']).format(value)
+    if unit:
+        val = ''.join([r'\text{\quad\SI{', fn, r'}', r'{', unit, r'}}'])
+    else:
+        val = ''.join([r'\text{\quad\num{', fn, r'}}'])
+    el.append(val)
+    if comment:
+        el += ['&&', '\\text{{{}}}'.format(str(comment)), r'\displaybreak[0]\\']
+    else:
+        el.append(r'\displaybreak[0]\\')
+    print(' '.join(el))
+
+
+_lnames = (
+    'acos', 'asin', 'atan', 'ceil', 'cos', 'cosh', 'e', 'log', 'log10', 'pi', 'sin', 'sinh',
+    'sqrt', 'tan', 'tanh', 'radians'
+)
 _greek = {
     'tau': '\\tau',
     'xi': '\\xi',
@@ -65,14 +122,6 @@ _greek = {
     'lambda': '\\lambda'
 }
 
-# To make eval() less dangerous.
-_globals = {"__builtins__": None}
-_lnames = (
-    'acos', 'asin', 'atan', 'ceil', 'cos', 'cosh', 'e', 'log', 'log10', 'pi', 'sin', 'sinh',
-    'sqrt', 'tan', 'tanh', 'radians'
-)
-_locals = {k: eval('math.' + k) for k in _lnames}
-
 
 def _texify(name):
     """
@@ -94,72 +143,6 @@ def _texify(name):
         elif len(items[1]) > 1:
             items[1] = '{' + items[1] + '}'
     return '_'.join(items)
-
-
-class Calculation(object):
-    """Class to contain a set of coherent calculations."""
-
-    __slots__ = ('fmt', 'prefix', 'suffix', 'lines')
-
-    def __init__(self, fmt=".2f"):
-        """Initialize a Calculation.
-
-        Arguments:
-            fmt: standard format to use for numbers. Defaults to “.2f”.
-        """
-        self.fmt = fmt
-        self.prefix = [r'\begin{align*}']
-        self.suffix = [r'\end{align*}']
-        self.lines = []
-
-    def add(self, name, expr, unit=None, comment=None, fmt=None):
-        """Add an equation to the calculation.
-
-        Arguments:
-            name: Name of the variable to assign the result to.
-            expr: Python expression or number. Can contain functions from
-                python's math module.
-            unit: Unit of the result in SIunitx format.
-            fmt: Number format for the result. Default is given during
-                creation of the Calculation object.
-            comment: Any comment string you want to append.
-        """
-        if not fmt:
-            fmt = self.fmt
-        expr = str(expr)
-        value = eval(expr, _globals, _locals)
-        exec(f'{name} = {value}', _locals)
-        n = ast.parse(expr)
-        el = [_texify(name) + ' &=']
-        if type(n.body[0].value).__name__ == 'Num':
-            el.append('&&=')
-        else:
-            v = _LatexVisitor()
-            v.visit(n)
-            el.append('\\displaystyle {} &&='.format(v.astex()))
-        fn = ''.join([r'{:', fmt, r'}']).format(value)
-        if unit:
-            val = ''.join([r'\text{\SI{', fn, r'}', r'{', unit, r'}}'])
-        else:
-            val = ''.join([r'\text{\num{', fn, r'}}'])
-        el.append(val)
-        if comment:
-            el += ['&&', '\\text{{{}}}'.format(str(comment)), r'\displaybreak[0]\\']
-        else:
-            el.append(r'\displaybreak[0]\\')
-        self.lines.append(' '.join(el))
-
-    def __str__(self):
-        """
-        Create a string representation of the calculation.
-
-        Returns:
-            The calculation in the form of a string.
-        """
-        if self.lines and self.lines[-1].endswith(r'\\'):
-            self.lines[-1] = self.lines[-1][:-2]
-        total = self.prefix + self.lines + self.suffix
-        return '\n'.join(total)
 
 
 class _LatexVisitor(ast.NodeVisitor):
