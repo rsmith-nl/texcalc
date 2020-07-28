@@ -48,7 +48,7 @@ calculations.
 
 The defined variables are also injected into the scope of the module where
 ``texcalc.line`` is called using ``sys._getframe(1).f_globals``, which I saw
-in a StackOverflow comment on `this answer`.
+in a StackOverflow comment on `this answer`_.
 This is done so you can use them in e.g. further generated text.
 
 .. _this answer: https://stackoverflow.com/questions/11813287/insert-variable-into-global-namespace-from-within-a-function/27642440#27642440
