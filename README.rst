@@ -94,11 +94,14 @@ As shown in this example, transliterated greek letters are converted to their
 proper typeset greek letters. (Also for upper case, so ``delta`` produces
 δ and ``Delta`` produces Δ.) In a similar way, underscores are used as
 a prefix for subscripts.
+Since this is a Python program, names used in the calculations are limited
+to valid Python names.
+
 
 .. Note::
 
     This module uses ``eval`` and ``exec``, which exposes the full
-    capabilities of the Python interpreter. This module should therefore _not_
+    capabilities of the Python interpreter. This module should therefore *not*
     be used with untrusted input!
 
 
