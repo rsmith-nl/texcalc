@@ -4,7 +4,7 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2020-10-03T16:25:31+0200
+# Last modified: 2020-10-03T16:27:48+0200
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
@@ -41,7 +41,6 @@ def line(name, expr, unit=None, comment=None, fmt=None):
     """
     module_namespace = sys._getframe(1).f_globals
     module_namespace.update(globals())
-    print(f"DEBUG: module_namespace = {module_namespace}")
     if not fmt:
         fmt = ".2f"
     expr = str(expr)
