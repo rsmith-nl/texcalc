@@ -15,7 +15,7 @@ from math import (  # noqa
     acos, asin, atan, ceil, cos, cosh, e, log, log10, pi, sin, sinh, sqrt, tan, tanh, radians
 )
 
-__version__ = '2.0'
+__version__ = "2020.07.28"
 
 
 def header():
