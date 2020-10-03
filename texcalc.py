@@ -12,7 +12,7 @@ It should therefore not be used with untrusted input."""
 import ast
 import math  # noqa
 
-__version__ = '1.0'
+__version__ = "2018.07.08"
 
 _greek = {
     'tau': '\\tau',
