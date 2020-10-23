@@ -12,18 +12,33 @@ It should therefore not be used with untrusted input."""
 import ast
 import sys
 from math import (  # noqa
-    acos, asin, atan, ceil, cos, cosh, e, log, log10, pi, sin, sinh, sqrt, tan, tanh, radians
+    acos,
+    asin,
+    atan,
+    ceil,
+    cos,
+    cosh,
+    e,
+    log,
+    log10,
+    pi,
+    sin,
+    sinh,
+    sqrt,
+    tan,
+    tanh,
+    radians,
 )
 
 __version__ = "2020-10-03"
 
 
 def header():
-    print(r'\begin{align*}')
+    print(r"\begin{align*}")
 
 
 def footer():
-    print(r'\end{align*}')
+    print(r"\end{align*}")
 
 
 def line(name, expr, unit=None, comment=None, fmt=None):
@@ -46,83 +61,97 @@ def line(name, expr, unit=None, comment=None, fmt=None):
     expr = str(expr)
     value = eval(expr, module_namespace)
     if name is not None:
-        exec(f'{name} = {value}', module_namespace)
-        el = [_texify(name) + ' &=&']
+        exec(f"{name} = {value}", module_namespace)
+        el = [_texify(name) + " &=&"]
     else:
-        el = [' &&']
+        el = [" &&"]
     n = ast.parse(expr)
-    if type(n.body[0].value).__name__ == 'Num':
-        el.append('&&=&')
+    if type(n.body[0].value).__name__ == "Num":
+        el.append("&&=&")
     else:
         v = _LatexVisitor()
         v.visit(n)
-        el.append('\\displaystyle {} &&=&'.format(v.astex()))
-    fn = ''.join([r'{:', fmt, r'}']).format(value)
+        el.append("\\displaystyle {} &&=&".format(v.astex()))
+    fn = "".join([r"{:", fmt, r"}"]).format(value)
     if unit:
-        val = ''.join([r'\text{\quad\SI{', fn, r'}', r'{', unit, r'}}'])
+        val = "".join([r"\text{\quad\SI{", fn, r"}", r"{", unit, r"}}"])
     else:
-        val = ''.join([r'\text{\quad\num{', fn, r'}}'])
+        val = "".join([r"\text{\quad\num{", fn, r"}}"])
     el.append(val)
     if comment:
-        el += ['&&', '\\text{{{}}}'.format(str(comment)), r'\displaybreak[0]\\']
+        el += ["&&", "\\text{{{}}}".format(str(comment)), r"\displaybreak[0]\\"]
     else:
-        el.append(r'\displaybreak[0]\\')
-    print(' '.join(el))
+        el.append(r"\displaybreak[0]\\")
+    print(" ".join(el))
 
 
 _lnames = (
-    'acos', 'asin', 'atan', 'ceil', 'cos', 'cosh', 'e', 'log', 'log10', 'pi', 'sin', 'sinh',
-    'sqrt', 'tan', 'tanh', 'radians'
+    "acos",
+    "asin",
+    "atan",
+    "ceil",
+    "cos",
+    "cosh",
+    "e",
+    "log",
+    "log10",
+    "pi",
+    "sin",
+    "sinh",
+    "sqrt",
+    "tan",
+    "tanh",
+    "radians",
 )
 _greek = {
-    'alpha': '\\alpha',
-    'Alpha': '\\Alpha',
-    'beta': '\\beta',
-    'Beta': '\\Beta',
-    'chi': '\\chi',
-    'Chi': '\\Chi',
-    'delta': '\\delta',
-    'Delta': '\\Delta',
-    'epsilon': '\\epsilon',
-    'Epsilon': '\\Epsilon',
-    'eta': '\\eta',
-    'Eta': '\\Eta',
-    'gamma': '\\gamma',
-    'Gamma': '\\Gamma',
-    'iota': '\\iota',
-    'Iota': '\\Iota',
-    'kappa': '\\kappa',
-    'Kappa': '\\Kappa',
-    'lambda': '\\lambda',
-    'Lambda': '\\Lambda',
-    'mu': '\\mu',
-    'Mu': '\\Mu',
-    'nu': '\\nu',
-    'Nu': '\\Nu',
-    'omega': '\\omega',
-    'Omega': '\\Omega',
-    'omicron': '\\omicron',
-    'Omicron': '\\Omicron',
-    'phi': '\\phi',
-    'Phi': '\\Phi',
-    'pi': '\\pi',
-    'Pi': '\\Pi',
-    'psi': '\\psi',
-    'Psi': '\\Psi',
-    'rho': '\\rho',
-    'Rho': '\\Rho',
-    'sigma': '\\sigma',
-    'Sigma': '\\Sigma',
-    'tau': '\\tau',
-    'Tau': '\\Tau',
-    'theta': '\\theta',
-    'Theta': '\\Theta',
-    'upsilon': '\\upsilon',
-    'Upsilon': '\\Upsilon',
-    'xi': '\\xi',
-    'Xi': '\\Xi',
-    'zeta': '\\zeta',
-    'Zeta': '\\Zeta'
+    "alpha": "\\alpha",
+    "Alpha": "\\Alpha",
+    "beta": "\\beta",
+    "Beta": "\\Beta",
+    "chi": "\\chi",
+    "Chi": "\\Chi",
+    "delta": "\\delta",
+    "Delta": "\\Delta",
+    "epsilon": "\\epsilon",
+    "Epsilon": "\\Epsilon",
+    "eta": "\\eta",
+    "Eta": "\\Eta",
+    "gamma": "\\gamma",
+    "Gamma": "\\Gamma",
+    "iota": "\\iota",
+    "Iota": "\\Iota",
+    "kappa": "\\kappa",
+    "Kappa": "\\Kappa",
+    "lambda": "\\lambda",
+    "Lambda": "\\Lambda",
+    "mu": "\\mu",
+    "Mu": "\\Mu",
+    "nu": "\\nu",
+    "Nu": "\\Nu",
+    "omega": "\\omega",
+    "Omega": "\\Omega",
+    "omicron": "\\omicron",
+    "Omicron": "\\Omicron",
+    "phi": "\\phi",
+    "Phi": "\\Phi",
+    "pi": "\\pi",
+    "Pi": "\\Pi",
+    "psi": "\\psi",
+    "Psi": "\\Psi",
+    "rho": "\\rho",
+    "Rho": "\\Rho",
+    "sigma": "\\sigma",
+    "Sigma": "\\Sigma",
+    "tau": "\\tau",
+    "Tau": "\\Tau",
+    "theta": "\\theta",
+    "Theta": "\\Theta",
+    "upsilon": "\\upsilon",
+    "Upsilon": "\\Upsilon",
+    "xi": "\\xi",
+    "Xi": "\\Xi",
+    "zeta": "\\zeta",
+    "Zeta": "\\Zeta",
 }
 
 
@@ -137,30 +166,30 @@ def _texify(name):
         The converted string.
     """
     name = name.strip()
-    items = name.split('_')
+    items = name.split("_")
     if items[0] in _greek:
         items[0] = _greek[items[0]]
     if len(items) == 2:
         if items[1] in _greek:
-            items[1] = '{' + _greek[items[1]] + '}'
+            items[1] = "{" + _greek[items[1]] + "}"
         elif len(items[1]) > 1:
-            items[1] = '{' + items[1] + '}'
-    return '_'.join(items)
+            items[1] = "{" + items[1] + "}"
+    return "_".join(items)
 
 
 class _LatexVisitor(ast.NodeVisitor):
     """Recursive visitor for LaTeX."""
 
-    __slots__ = ('txtexpr', 'target')
-    _fnames = {k: f'\\{k}' for k in _lnames}
+    __slots__ = ("txtexpr", "target")
+    _fnames = {k: f"\\{k}" for k in _lnames}
     # Exceptions where TeX deviates from Python:
-    _fnames['log'] = '\\ln'
-    _fnames['log10'] = '\\log'
-    _fnames['asin'] = '\\arcsin'
-    _fnames['acos'] = '\\arccos'
-    _fnames['atan'] = '\\arctan'
-    _fnames['radians'] = 'radians'
-    del (_fnames['e'])  # Not a special name in TeX.
+    _fnames["log"] = "\\ln"
+    _fnames["log10"] = "\\log"
+    _fnames["asin"] = "\\arcsin"
+    _fnames["acos"] = "\\arccos"
+    _fnames["atan"] = "\\arctan"
+    _fnames["radians"] = "radians"
+    del _fnames["e"]  # Not a special name in TeX.
 
     def __init__(self):
         self.txtexpr = []
@@ -169,7 +198,7 @@ class _LatexVisitor(ast.NodeVisitor):
 
     def astex(self):
         """Return a TeX mathematical expression"""
-        return ''.join(self.txtexpr)
+        return "".join(self.txtexpr)
 
     def generic_visit(self, node):
         pass
@@ -182,22 +211,21 @@ class _LatexVisitor(ast.NodeVisitor):
 
     def visit_UnaryOp(self, node):
         if isinstance(node.op, ast.USub):
-            self.txtexpr.append('-')
+            self.txtexpr.append("-")
             self.visit(node.operand)
 
     def visit_BinOp(self, node):
-
         def wrap(nd):
-            self.txtexpr.append(r'{\left(')
+            self.txtexpr.append(r"{\left(")
             self.visit(nd)
-            self.txtexpr.append(r'\right)}')
+            self.txtexpr.append(r"\right)}")
 
         if isinstance(node.op, ast.Div):
-            self.txtexpr.append(r'\frac{')
+            self.txtexpr.append(r"\frac{")
             self.visit(node.left)
-            self.txtexpr.append(r'}{')
+            self.txtexpr.append(r"}{")
             self.visit(node.right)
-            self.txtexpr.append(r'}')
+            self.txtexpr.append(r"}")
             return
         if isinstance(node.op, ast.Pow):
             if isinstance(node.left, ast.BinOp):
@@ -206,21 +234,22 @@ class _LatexVisitor(ast.NodeVisitor):
                 self.visit(node.left)
             self.visit(node.op)
             if isinstance(node.right, ast.BinOp):
-                self.txtexpr.append(r'{')
+                self.txtexpr.append(r"{")
                 self.visit(node.right)
-                self.txtexpr.append(r'}')
+                self.txtexpr.append(r"}")
             else:
                 self.visit(node.right)
             return
         if isinstance(node.op, ast.Mult):
-            if (isinstance(node.left, ast.BinOp) and isinstance(node.left.op, (ast.Add, ast.Sub))):
+            if isinstance(node.left, ast.BinOp) and isinstance(
+                node.left.op, (ast.Add, ast.Sub)
+            ):
                 wrap(node.left)
             else:
                 self.visit(node.left)
             self.visit(node.op)
-            if (
-                isinstance(node.right, ast.BinOp) and
-                isinstance(node.right.op, (ast.Add, ast.Sub))
+            if isinstance(node.right, ast.BinOp) and isinstance(
+                node.right.op, (ast.Add, ast.Sub)
             ):
                 wrap(node.right)
             else:
@@ -246,24 +275,24 @@ class _LatexVisitor(ast.NodeVisitor):
         self.txtexpr.append(str(node.n))
 
     def visit_Add(self, node):
-        self.txtexpr.append('+')
+        self.txtexpr.append("+")
 
     def visit_Sub(self, node):
-        self.txtexpr.append('-')
+        self.txtexpr.append("-")
 
     def visit_Mult(self, node):
-        self.txtexpr.append(r'\cdot ')
+        self.txtexpr.append(r"\cdot ")
 
     def visit_Pow(self, node):
-        self.txtexpr.append('^')
+        self.txtexpr.append("^")
 
     def visit_Call(self, node):
         self.visit(node.func)
-        self.txtexpr.append('(')
+        self.txtexpr.append("(")
         for a in node.args:
             self.visit(a)
-        self.txtexpr.append(')')
+        self.txtexpr.append(")")
 
     def visit_Div(self, node):
-        '''Handled at the BinOp level.'''
+        """Handled at the BinOp level."""
         pass
