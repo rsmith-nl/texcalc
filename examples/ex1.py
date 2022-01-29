@@ -10,16 +10,16 @@
 import texcalc as tc
 
 
-print('texcalc version:', tc.__version__)
+print("texcalc version:", tc.__version__)
 
 tc.header()
-tc.line('rho_f', '1.62', 'g/cm^3', 'Fiber density')
-tc.line('rho_r', '1.2', 'g/cm^3', "Resin density")
-tc.line('v_f', '0.3', '-', 'Fiber volume fraction')
-tc.line('W_f', '450', 'g/m^2', "Area weight fibers", fmt=".0f")
-tc.line('t_f', 'W_f/(10000*rho_f)*10', 'mm')
-tc.line('t', 't_f/v_f', 'mm', "Laminate thickness")
-tc.line('t_r', 't-t_f', 'mm')
-tc.line('W_r', 't_f/10*(10000*rho_r)', 'g/m^2', "Area weight resin", fmt=".0f")
-tc.line(None, 'W_f+W_r', 'g/m^2', "Total area weight", fmt=".0f")
+tc.line("rho_f", "1.62", "g/cm^3", "Fiber density")
+tc.line("rho_r", "1.2", "g/cm^3", "Resin density")
+tc.line("v_f", "0.3", "-", "Fiber volume fraction")
+tc.line("W_f", "450", "g/m^2", "Area weight fibers", fmt=".0f")
+tc.line("t_f", "W_f/(10000*rho_f)*10", "mm")
+tc.line("t", "t_f/v_f", "mm", "Laminate thickness")
+tc.line("t_r", "t-t_f", "mm")
+tc.line("W_r", "t_f/10*(10000*rho_r)", "g/m^2", "Area weight resin", fmt=".0f")
+tc.line(None, "W_f+W_r", "g/m^2", "Total area weight", fmt=".0f")
 tc.footer()
