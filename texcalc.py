@@ -4,7 +4,7 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2022-04-17T10:34:30+0200
+# Last modified: 2022-04-17T10:34:51+0200
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
@@ -103,21 +103,21 @@ def line(name, expr, unit=None, comment=None, fmt=None):
 
 
 _fnames = {
-    'acos': '\\arccos',
-    'asin': '\\arcsin',
-    'atan': '\\arctan',
-    'ceil': '\\ceil',
-    'cos': '\\cos',
-    'cosh': '\\cosh',
-    'log': '\\ln',
-    'log10': '\\log',
-    'pi': '\\pi',
-    'sin': '\\sin',
-    'sinh': '\\sinh',
-    'sqrt': '\\sqrt',
-    'tan': '\\tan',
-    'tanh': '\\tanh',
-    'radians': 'radians'
+    "acos": "\\arccos",
+    "asin": "\\arcsin",
+    "atan": "\\arctan",
+    "ceil": "\\ceil",
+    "cos": "\\cos",
+    "cosh": "\\cosh",
+    "log": "\\ln",
+    "log10": "\\log",
+    "pi": "\\pi",
+    "sin": "\\sin",
+    "sinh": "\\sinh",
+    "sqrt": "\\sqrt",
+    "tan": "\\tan",
+    "tanh": "\\tanh",
+    "radians": "radians",
 }
 _greek = {
     "alpha": "\\alpha",
