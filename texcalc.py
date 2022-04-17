@@ -4,7 +4,7 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2020-10-03T16:27:48+0200
+# Last modified: 2022-04-17T10:07:30+0200
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
@@ -31,9 +31,14 @@ from math import (  # noqa
 )
 
 __version__ = "2020-10-03"
+# Default format
+_fmt = ".2f"
 
 
-def header():
+def header(fmt=None):
+    global _fmt
+    if fmt:
+        _fmt = fmt
     print(r"\begin{align*}")
 
 
@@ -57,7 +62,7 @@ def line(name, expr, unit=None, comment=None, fmt=None):
     module_namespace = sys._getframe(1).f_globals
     module_namespace.update(globals())
     if not fmt:
-        fmt = ".2f"
+        fmt = _fmt
     expr = str(expr)
     value = eval(expr, module_namespace)
     if name is not None:
