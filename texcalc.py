@@ -4,7 +4,7 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2022-04-17T10:27:14+0200
+# Last modified: 2022-04-17T10:34:30+0200
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
@@ -102,24 +102,23 @@ def line(name, expr, unit=None, comment=None, fmt=None):
     print(" ".join(el))
 
 
-_lnames = (
-    "acos",
-    "asin",
-    "atan",
-    "ceil",
-    "cos",
-    "cosh",
-    "e",
-    "log",
-    "log10",
-    "pi",
-    "sin",
-    "sinh",
-    "sqrt",
-    "tan",
-    "tanh",
-    "radians",
-)
+_fnames = {
+    'acos': '\\arccos',
+    'asin': '\\arcsin',
+    'atan': '\\arctan',
+    'ceil': '\\ceil',
+    'cos': '\\cos',
+    'cosh': '\\cosh',
+    'log': '\\ln',
+    'log10': '\\log',
+    'pi': '\\pi',
+    'sin': '\\sin',
+    'sinh': '\\sinh',
+    'sqrt': '\\sqrt',
+    'tan': '\\tan',
+    'tanh': '\\tanh',
+    'radians': 'radians'
+}
 _greek = {
     "alpha": "\\alpha",
     "Alpha": "\\Alpha",
@@ -198,15 +197,6 @@ class _LatexVisitor(ast.NodeVisitor):
     """Recursive visitor for LaTeX."""
 
     __slots__ = ("txtexpr", "target")
-    _fnames = {k: f"\\{k}" for k in _lnames}
-    # Exceptions where TeX deviates from Python:
-    _fnames["log"] = "\\ln"
-    _fnames["log10"] = "\\log"
-    _fnames["asin"] = "\\arcsin"
-    _fnames["acos"] = "\\arccos"
-    _fnames["atan"] = "\\arctan"
-    _fnames["radians"] = "radians"
-    del _fnames["e"]  # Not a special name in TeX.
 
     def __init__(self):
         self.txtexpr = []
@@ -277,14 +267,14 @@ class _LatexVisitor(ast.NodeVisitor):
             self.visit(node.right)
 
     def visit_Name(self, node):
-        if node.id in _LatexVisitor._fnames:
-            self.txtexpr.append(_LatexVisitor._fnames[node.id])
+        if node.id in _fnames:
+            self.txtexpr.append(_fnames[node.id])
         else:
             self.txtexpr.append(_texify(node.id))
 
     def visit_Attribute(self, node):
-        if node.attr in _LatexVisitor._fnames:
-            self.txtexpr.append(_LatexVisitor._fnames[node.attr])
+        if node.attr in _fnames:
+            self.txtexpr.append(_fnames[node.attr])
         else:
             self.txtexpr.append(node.attr)
 
