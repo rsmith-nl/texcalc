@@ -4,7 +4,7 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2022-04-17T10:16:32+0200
+# Last modified: 2022-04-17T10:27:14+0200
 """Module to do and print calculations. Prints formatted statements.
 Note that this module uses both eval() and exec().
 It should therefore not be used with untrusted input."""
@@ -36,6 +36,14 @@ _fmt = ".2f"
 
 
 def header(fmt=None):
+    """
+    Print the header for the calculation, set the default format.
+    Ever calculation should start with this.
+
+    Arguments:
+        fmt: Number format for the result.
+             If not supplied then the default of ".2f" is used.
+    """
     global _fmt
     if fmt:
         _fmt = fmt
@@ -43,6 +51,10 @@ def header(fmt=None):
 
 
 def footer():
+    """
+    Print the footer.
+    Every calculation should end with invoking this.
+    """
     print(r"\end{align*}")
 
 
@@ -56,7 +68,7 @@ def line(name, expr, unit=None, comment=None, fmt=None):
             python's math module.
         unit: Unit of the result in SIunitx format.
         fmt: Number format for the result. Default is given during
-            creation of the Calculation object.
+            writing of the header.
         comment: Any comment string you want to append.
     """
     module_namespace = sys._getframe(1).f_globals
