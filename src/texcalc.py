@@ -4,7 +4,7 @@
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>.
 # SPDX-License-Identifier: MIT
 # Created: 2014-05-04T11:28:35+0200
-# Last modified: 2024-07-23T07:18:40+0200
+# Last modified: 2024-07-23T07:54:09+0200
 """
 Module to do and print calculations in LaTeX format.
 Prints formatted statements.
@@ -86,7 +86,7 @@ def line(name, expr, unit=None, comment=None, fmt=None):
     else:
         el = [" &&"]
     n = ast.parse(expr)
-    if type(n.body[0].value).__name__ in ("Constant", "BinOp"):
+    if type(n.body[0].value).__name__ == "Constant":
         el.append("&&=&")
     else:
         v = _LatexVisitor()
