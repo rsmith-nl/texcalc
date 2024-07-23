@@ -12,11 +12,14 @@ license = {file = "LICENSE.txt"}
 requires-python = ">=3.9"
 dynamic = ["version", "description"]
 classifiers = [
-   'Development Status :: 5 - Production/Stable', 'Environment :: Console',
-   'Intended Audience :: End Users/Desktop', 'Intended Audience :: Manufacturing',
-   'License :: OSI Approved :: MIT License', 'Operating System :: OS Independent',
-   'Programming Language :: Python :: 3', 'Topic :: Scientific/Engineering'
+   'Development Status :: 5 - Production/Stable',
+   'Environment :: Console',
+   'Intended Audience :: End Users/Desktop',
+   'License :: OSI Approved :: MIT License',
+   'Operating System :: OS Independent',
+   'Programming Language :: Python :: 3',
+   'Topic :: Scientific/Engineering'
 ]
 
 [project.urls]
-Repository = "https://github.com/rsmith-nl/"
+Repository = "https://github.com/rsmith-nl/texcalc"
